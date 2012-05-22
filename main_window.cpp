@@ -35,12 +35,13 @@
 **
 ****************************************************************************/
 
+#if 0
 #include <QtGui>
 #include <QActionGroup>
-#if 1
 #include <QMessageBox>
 #include <QComboBox>
 #include <QLineEdit>
+#include <QMenuBar>
 #endif
 
 #include <unistd.h>
@@ -977,13 +978,16 @@ void MainWindow::preview_without_save_slot()
 
   //qDebug() << "xx template_data: " << template_data;
   QFile temp_qf;
+#if 0
 #ifdef Q_OS_WIN32
   preview_fn_ = QFSFileEngine::tempPath() + "t_view.html";
 #else
   preview_fn_ = QFSFileEngine::tempPath() + "t_view.html";
 #endif
   DEBUG_LOG(QFSFileEngine::tempPath());
+#endif
 
+  preview_fn_ = QString("/tmp/") + "t_view.html";
   temp_qf.setFileName(preview_fn_);
   if (!temp_qf.open(QIODevice::WriteOnly))
   {

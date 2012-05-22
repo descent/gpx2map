@@ -5,7 +5,7 @@
 #CONFIG += static 
 #CONFIG += staticlib
 CONFIG      += console debug
-QT += core gui xml network webkit
+QT += widgets xml webkit
 TARGET 	= gpx2map
 
 

@@ -1,11 +1,15 @@
 #ifndef MAIN_WINDOW_H
 #define MAIN_WINDOW_H
 
+#include <QtWidgets>
+
+#if 0
 #include <QMainWindow>
 #include <QString>
 #include <QTreeWidget>
 #include <QSplitter>
-
+#include <QMenu>
+#endif
 
 #include <map>
 
