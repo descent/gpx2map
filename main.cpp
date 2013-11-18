@@ -31,8 +31,8 @@ int main(int argc, char *argv[])
   QApplication app(argc, argv);
   QTranslator translator;
   //translator.load("./a_zh_CN.qm");
-  translator.load("./a_zh_TW.qm");
-  app.installTranslator(&translator);
+  //translator.load("./a_zh_TW.qm");
+  //app.installTranslator(&translator);
 
   MainWindow mainWin;
   mainWin.show();
