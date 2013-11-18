@@ -5,11 +5,15 @@
 #include <QString>
 #include <QTreeWidget>
 #include <QSplitter>
-
+#include <QTranslator>
 
 #include <map>
 
 #include "point_view.h"
+
+#define EN_US 0
+#define T_CHINESE 1
+#define S_CHINESE 2
 
 using namespace std;
 
@@ -78,9 +82,10 @@ class MainWindow : public QMainWindow
     void get_trk(const QString &fn, int index);
     FileTrkAttr* get_cur_file_trk_attr();
 
-
-
   private:
+    QActionGroup *lang_action_group_;
+    void create_lang_menu(QMenu *menu);
+    int hl_;
     //QString preview_fn_;
     QSplitter *splitter_;
     QTreeWidget *route_view_, *select_route_view_;
@@ -104,6 +109,7 @@ class MainWindow : public QMainWindow
     QAction *about_, *about_qt_;
     QAction *t_chinese_;
     QAction *s_chinese_;
+    QAction *en_us_;
     QMenu *setting_menu_, *lang_menu_, *select_lang_;
     QAction *change_font_, *show_debug_log_;
  
@@ -113,6 +119,7 @@ class MainWindow : public QMainWindow
     QDomDocument dom_doc_;
     map<QString, FileTrkAttr*> file_trk_attr_;
     void update_no(QTreeWidget *view, int index);
+    void retranslate_ui();
 
 
     void create_html_file(QByteArray &template_data);
@@ -120,6 +127,7 @@ class MainWindow : public QMainWindow
     int write_to_save_file(const QString &w_fn);
     void open_cfg();
     QString preview_fn_;
+    QTranslator app_trans_, qt_trans_;
 
   protected:
     void closeEvent ( QCloseEvent * event );
@@ -139,9 +147,12 @@ class MainWindow : public QMainWindow
     void open_color_dialog(QTreeWidgetItem * item, int column);
     void open_file_slot();
     void preview_without_save_slot();
-
+    void select_t_chinese_slot();
+    void select_s_chinese_slot();
+    void select_en_us_slot();
 
   private slots:
+    void switch_lang(QAction *action); 
     bool close();
     void change_font_slot();
     void show_debug_log_slot();

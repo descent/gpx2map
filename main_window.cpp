@@ -95,10 +95,16 @@ bool qcolor2html_color_str(const QColor &qc, QString &html_color_str)
   return true;
 }
 
-MainWindow::MainWindow():QMainWindow()
+MainWindow::MainWindow()
+  :QMainWindow(), hl_(EN_US)
 { 
+  qApp->installTranslator(&app_trans_);
+  qApp->installTranslator(&qt_trans_);
+
   setWindowIcon(QIcon(":/images/window_icon.png"));
+
   open_cfg();
+
   create_form_groupbox();
 
   // init font
@@ -125,6 +131,15 @@ MainWindow::MainWindow():QMainWindow()
   nodes=dom_doc_.elementsByTagName("backup_file");
   e = nodes.at(0).toElement(); // try to convert the node to an element.
 
+  lang_menu_ = menuBar()->addMenu(tr("&Language"));
+  create_lang_menu(lang_menu_);
+#if 0
+  select_lang_ = lang_menu_->addMenu(tr("&Select"));
+
+  ADD_ACTION(select_lang_, en_us_, "&EN US", select_en_us_slot)
+  ADD_ACTION(select_lang_, t_chinese_, "&Tradition Chinese", select_t_chinese_slot)
+  ADD_ACTION(select_lang_, s_chinese_, "&Simple Chinese", select_s_chinese_slot)
+#endif
   help_menu_ = menuBar()->addMenu(tr("&Help"));
   about_qt_ = new QAction(tr("About &Qt"), this);
   about_qt_->setShortcut(tr("Ctrl+Q"));
@@ -330,6 +345,21 @@ const char *win_version_str()
 }
 #endif
 
+void MainWindow::select_en_us_slot()
+{
+  hl_ = EN_US;
+}
+
+void MainWindow::select_t_chinese_slot()
+{
+  hl_ = T_CHINESE;
+}
+
+void MainWindow::select_s_chinese_slot()
+{
+  hl_ = S_CHINESE;
+}
+
 void MainWindow::about_slot()
 {
   QMessageBox msg_box;
@@ -390,9 +420,11 @@ void MainWindow::get_wpt(const QDomNode &node, WptAttribute &wpt_attr)
       qDebug() << "e.tagName() : " << e.tagName();
       if (e.tagName()=="wpt")
       {
+#ifdef WPT
 	points += ("lat:" + e.attribute("lat") + ",lon:" + e.attribute("lon"));
 	qDebug() << points;
 	wpt_attr[e.tagName()]=points;
+#endif
       }
       else
       {
@@ -982,11 +1014,14 @@ void MainWindow::preview_without_save_slot()
 
   //qDebug() << "xx template_data: " << template_data;
   QFile temp_qf;
+#if 0
 #ifdef Q_OS_WIN32
   preview_fn_ = QFSFileEngine::tempPath() + "t_view.html";
 #else
-  preview_fn_ = QFSFileEngine::tempPath() + "t_view.html";
 #endif
+#endif
+
+  preview_fn_ = QFSFileEngine::tempPath() + "/t_view.html";
   DEBUG_LOG(QFSFileEngine::tempPath());
 
   temp_qf.setFileName(preview_fn_);
@@ -1415,3 +1450,41 @@ void MainWindow::change_font_slot()
   #endif
 }
 
+void MainWindow::create_lang_menu(QMenu *menu)
+{
+  lang_action_group_ = new QActionGroup(this);
+  connect(lang_action_group_, SIGNAL(triggered(QAction *)), this, SLOT(switch_lang(QAction *)));
+  QString langs[] = {tr("&EN US"), tr("&Tradition Chinese"), tr("&Simple Chinese")};
+  for (int i=0 ; i < 3; ++i)
+  {
+    QAction *action = new QAction(langs[i], this);
+    action->setCheckable(true);
+    //action->setData(langs[i]);
+    action->setData(i);
+    menu->addAction(action);
+    lang_action_group_->addAction(action);
+    if (i==0)
+      action->setChecked(true);
+  }
+}
+
+void MainWindow::switch_lang(QAction *action)
+{  
+  //qDebug() << "lang: " << action->data().toString();
+  qDebug() << "lang: " << action->data().toInt();
+
+  QString trans_fp[] = {"", "./a_zh_TW.qm", "./a_zh_CN.qm"};
+
+  app_trans_.load(trans_fp[action->data().toInt()]);
+  //qt_trans_.load();
+  retranslate_ui();
+}
+
+void MainWindow::retranslate_ui()
+{
+  lang_menu_->setTitle(tr("&Language"));
+  help_menu_->setTitle(tr("&Help"));
+
+  about_qt_->setText(tr("About &Qt"));
+  //about_qt_->setStatusTip(tr("About &Qt"));
+}
