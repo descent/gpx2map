@@ -31,6 +31,8 @@ SOURCES	= main_window.cpp \
 	  alt_key.cpp \
           main.cpp
 
+#TRANSLATIONS = $${TARGET}_zh_TW.ts $${TARGET}_zh_CN.ts $${TARGET}_JP.ts
+TRANSLATIONS = a_zh_TW.ts a_zh_CN.ts
 
 
 
