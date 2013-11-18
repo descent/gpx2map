@@ -126,6 +126,11 @@ MainWindow::MainWindow():QMainWindow()
   e = nodes.at(0).toElement(); // try to convert the node to an element.
 
   help_menu_ = menuBar()->addMenu(tr("&Help"));
+  about_qt_ = new QAction(tr("About &Qt"), this);
+  about_qt_->setShortcut(tr("Ctrl+Q"));
+  connect(about_qt_, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
+  help_menu_->addAction(about_qt_); 
+
   ADD_ACTION(help_menu_, about_, "&About", about_slot)
 
   QRect desktop_rect=QApplication::desktop()->screenGeometry();

@@ -101,8 +101,10 @@ class MainWindow : public QMainWindow
     QGroupBox *formGroupBox, *sel_group_box_;
     QMenu *file_menu_, *edit_menu_, *help_menu_;
     QAction *orientation_;
-    QAction *about_;
-    QMenu *setting_menu_;
+    QAction *about_, *about_qt_;
+    QAction *t_chinese_;
+    QAction *s_chinese_;
+    QMenu *setting_menu_, *lang_menu_, *select_lang_;
     QAction *change_font_, *show_debug_log_;
  
     QByteArray qba_;
